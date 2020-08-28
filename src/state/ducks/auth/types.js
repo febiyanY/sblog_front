@@ -1,0 +1,5 @@
+export const START_AUTH = 'auth/START_AUTH'
+export const AUTH_SUCCEED = 'auth/AUTH_SUCCEED'
+export const AUTH_FAILED = 'auth/AUTH_FAILED'
+export const LOAD_USER_DATA = 'auth/LOAD_USER_DATA'
+export const LOGOUT = 'auth/LOGOUT'
