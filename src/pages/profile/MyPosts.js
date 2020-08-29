@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import {ListGroup, ListGroupItem, Button } from 'reactstrap'
+import { Card, Button, Grid, Divider } from '@material-ui/core'
 import axios from '../../axioses/axios-default'
 import { useDispatch, useSelector } from 'react-redux'
 import { uiOperations } from '../../state/ducks/ui'
 import { Link } from 'react-router-dom'
+import moment from 'moment'
 
 const MyPost = props => {
 
@@ -23,21 +24,26 @@ const MyPost = props => {
     }, [dispatch, user.token, user.userId])
 
     return (
-        <div>
-            <Button color="secondary" size="sm" onClick={() => props.history.push('/post/new')}>Add Post</Button>
-            <ListGroup>
+        <div style={{marginTop : '5%'}}>
+            <Button variant="outlined" color="primary" size="small" onClick={() => props.history.push('/post/new')}>Add Post</Button>
+            <Card variant="outlined" style={{ padding: '2%' }}>
                 {posts.map((post, i) => {
                     return (
-                        <Link to={`/posts/${post.key}`} key={i} style={{textDecoration:'none', color : "black"}}>
-                            <ListGroupItem>
-                                <div><b>{post.title}</b></div>
-                                <div><small>{new Date(post.time).toString()}</small></div>
-                            </ListGroupItem>
+                        <Link to={`/posts/${post.key}`} key={i} style={{ textDecoration: 'none', color: "black" }}>
+                            <Grid container>
+                                <Grid item xs={9}>
+                                    <p><b>{post.title}</b></p>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <small>{moment(post.time).format("MMM-Do-YYYY")}</small>
+                                </Grid>
+                            </Grid>
+                            <Divider />
                         </Link>
-
+                        
                     )
                 })}
-            </ListGroup>
+            </Card>
         </div>
     )
 }

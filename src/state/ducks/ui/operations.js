@@ -1,5 +1,5 @@
-import {hideLoader, showLoader} from './actions'
+import {hideLoader, showLoader, setDrawer} from './actions'
 
 export {
-    hideLoader, showLoader
+    hideLoader, showLoader, setDrawer
 }

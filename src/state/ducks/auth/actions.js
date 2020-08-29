@@ -18,3 +18,7 @@ export const loadUserData = (payload) => ({
     type : types.LOAD_USER_DATA,
     payload
 })
+export const changeAva = (payload) => ({
+    type : types.CHANGE_AVA,
+    payload
+})

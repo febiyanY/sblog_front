@@ -1,11 +1,12 @@
 import React, {Suspense} from 'react'
-import {useSelector} from 'react-redux'
+// import {useSelector} from 'react-redux'
 import { RouteWithSubRoutes } from '../routes/routes'
 import {Switch} from 'react-router-dom'
 import NProgress from './NProgress'
 
 export const GenerateRoute = props => {
-    const {isAuth} = useSelector(state => state.auth)
+    // const {isAuth} = useSelector(state => state.auth)
+    const isAuth = Boolean(localStorage.getItem('userId'))
 
     let routeList
     if (isAuth) {
@@ -22,7 +23,8 @@ export const GenerateRoute = props => {
 }
 
 export const GenerateRouteWithSwitch = props => {
-    const {isAuth} = useSelector(state => state.auth)
+    // const {isAuth} = useSelector(state => state.auth)
+    const isAuth = Boolean(localStorage.getItem('userId'))
     
     let routeList = []
     if(isAuth){

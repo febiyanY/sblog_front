@@ -1,17 +1,12 @@
 import React from 'react'
-import {
-    Card, CardText, CardBody,
-    CardTitle, CardSubtitle
-} from 'reactstrap';
+import { Card } from '@material-ui/core'
 
 const Quoted = props => {
 
     return (
-        <Card>
-            <CardBody>
-                <CardTitle><b>@{props.username}</b></CardTitle>
-                <CardText>{props.body}</CardText>
-            </CardBody>
+        <Card variant="outlined" style={{padding : '1%', backgroundColor : "#e0e5ff"}}>
+            <p><b>@{props.username}</b></p>
+            {props.body}
         </Card>
     )
 }

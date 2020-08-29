@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
-import Jumbo from '../components/Jumbotron'
+import Home from '../pages/Home'
 
 export const RouteWithSubRoutes = route => {
     return (
@@ -15,7 +15,7 @@ export const RouteWithSubRoutes = route => {
 }
 
 const routes = [
-    { path: '/', component: Jumbo, exact: true },
+    { path: '/', component: Home, exact: true },
     { path: '/login', component: React.lazy(() => import('../pages/Login')) },
     { path: '/signup', component: React.lazy(() => import('../pages/SignUp')) },
     { path: '/logout', component: React.lazy(() => import('../pages/Logout')), auth: true },

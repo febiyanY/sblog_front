@@ -8,7 +8,7 @@ import NProgress from './components/NProgress'
 import Layout from './layout/Layout'
 import { onCheckAuth } from './state/ducks/auth'
 import { useDispatch } from 'react-redux'
-import { GenerateRoute } from './components/GenerateRoute'
+// import { GenerateRoute } from './components/GenerateRoute'
 
 const App = props => {
   const dispatch = useDispatch()

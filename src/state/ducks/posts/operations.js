@@ -1,4 +1,4 @@
-import {clearPosts, loadFailed, loadSuccess, startLoad} from './actions'
+import {clearPosts, loadFailed, loadSuccess} from './actions'
 import axios from '../../../axioses/axios-default'
 import {uiOperations} from '../ui'
 

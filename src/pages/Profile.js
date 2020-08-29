@@ -1,21 +1,53 @@
-import React from 'react'
-import { Row, Col } from 'reactstrap'
-import { Switch, NavLink as RRNavLink} from 'react-router-dom'
+import React,{useEffect, useState} from 'react'
+import { Grid, Button } from '@material-ui/core'
+import { Switch} from 'react-router-dom'
 import { RouteWithSubRoutes } from '../routes/routes'
-import { Nav, NavLink } from 'reactstrap'
 
 const Profile = props => {
+    const [button, setButton] = useState({account : 'contained', post : undefined})
+
+    const goTo = (link, id) => {
+        let btn = {...button}
+        for(let key in btn){
+            if(key===id){
+                btn[key]='contained'
+            }else{
+                btn[key]=undefined
+            }
+        }
+        setButton(btn)
+        props.history.push(link)
+    }
+
+    useEffect(() => {
+        let pathname = window.location.pathname
+        let to
+        if(pathname===`${props.match.url}/${localStorage.getItem('username')}`){
+            to = 'account'
+        }else if(pathname===`${props.match.url}/${localStorage.getItem('username')}/posts`){
+            to = 'post'
+        }
+        let btn = {...button}
+        for(let key in btn){
+            if(key===to){
+                btn[key]='contained'
+            }else{
+                btn[key]=undefined
+            }
+        }
+        setButton(btn)
+    },[])
 
     return (
         <div>
-            <Row style={{ marginTop: '2%' }}>
-                <Col sm="12">
-                    <Nav className="navlinks">
-                        <NavLink tag={RRNavLink} to={`${props.match.url}/${localStorage.getItem('username')}`} exact> Account </NavLink>
-                        <NavLink tag={RRNavLink} to={`${props.match.url}/${localStorage.getItem('username')}/posts`} exact> My Post </NavLink>
-                    </Nav>
-                </Col>
-            </Row>
+            <Grid container style={{ marginTop: '2%' }}>
+                <Grid item xs={12}>
+                    {/* <NavLink  to={`${props.match.url}/${localStorage.getItem('username')}`} exact> Account </NavLink>
+                    <NavLink  to={`${props.match.url}/${localStorage.getItem('username')}/posts`} exact> My Post </NavLink> */}
+                    <Button color="primary" variant={button.account} onClick={() => goTo(`${props.match.url}/${localStorage.getItem('username')}`, 'account')} disableElevation> Account </Button>
+                    <Button color="primary" variant={button.post} onClick={() => goTo(`${props.match.url}/${localStorage.getItem('username')}/posts`, 'post')} disableElevation> My Post </Button>
+                </Grid>
+            </Grid>
             <Switch>
                 {props.routes.map((route, i) => {
                     return <RouteWithSubRoutes key={i} {...route} />

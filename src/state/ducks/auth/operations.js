@@ -2,10 +2,14 @@ import { authFailed, authSucceed, logout, loadUserData } from './actions'
 import { uiOperations } from '../ui'
 import axios from '../../../axioses/axios-default'
 
+export {
+    authFailed
+}
+
 export const onAuthStart = (data) => dispatch => {
     dispatch(uiOperations.showLoader())
     axios.post('/login', data).then(res => {
-        console.log(res)
+        // console.log(res)
         const user = res.data
         localStorage.setItem('userId', user.data.id)
         localStorage.setItem('username', user.data.username)
@@ -26,19 +30,24 @@ export const onAuthStart = (data) => dispatch => {
 
 export const onLoadUserData = () => dispatch => {
     dispatch(uiOperations.showLoader())
-    axios.get(`/users/${localStorage.getItem('userId')}`, {headers : {Authorization : `Bearer ${localStorage.getItem('token')}`}}).then(res => {
-        const user = res.data
-        localStorage.setItem('userId', user.id)
-        localStorage.setItem('username', user.username)
-        localStorage.setItem('display_name', user.display_name)
-        localStorage.setItem('ava', user.ava)
-        dispatch(loadUserData({userId : user.id, username : user.username, display_name : user.display_name, ava : user.ava }))
-        dispatch(uiOperations.hideLoader())
-    }).catch(err => {
-        console.log(err)
-        dispatch(authFailed(err))
-        dispatch(uiOperations.hideLoader())
+    return new Promise((resolve, reject) => {
+        axios.get(`/users/${localStorage.getItem('userId')}`, {headers : {Authorization : `Bearer ${localStorage.getItem('token')}`}}).then(res => {
+            const user = res.data
+            localStorage.setItem('userId', user.id)
+            localStorage.setItem('username', user.username)
+            localStorage.setItem('display_name', user.display_name)
+            localStorage.setItem('ava', user.ava)
+            dispatch(loadUserData({userId : user.id, username : user.username, display_name : user.display_name, ava : user.ava }))
+            dispatch(uiOperations.hideLoader())
+            resolve({message : 'suksesss'})
+        }).catch(err => {
+            // console.log(err.response.data)
+            dispatch(authFailed(err.response.data.message))
+            dispatch(uiOperations.hideLoader())
+            reject()
+        })
     })
+    
 }
 
 export const onLogout = () => dispatch => {
@@ -67,4 +76,27 @@ export const onCheckAuth = () => dispatch => {
     }else{
         dispatch(logout())
     }
+}
+
+export const onChangeAva = (ava) => dispatch => {
+    dispatch(uiOperations.showLoader())
+    let formData = new FormData()
+    formData.append('image', ava)
+    formData.append('userId', localStorage.getItem('userId'))
+    return new Promise((resolve, reject) => {
+        axios.post('/users/uploadava', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization : `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then(res => {
+            dispatch(uiOperations.hideLoader())
+            resolve(res.data)
+        }).catch(err => {
+            dispatch(authFailed(err.response.data.message))
+            dispatch(uiOperations.hideLoader())
+            reject(err.response.data)
+        })
+    })
+    
 }

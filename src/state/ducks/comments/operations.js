@@ -1,4 +1,4 @@
-import {loadSuccess, clearComments, loadFailed, loadStart} from './actions'
+import {loadSuccess, clearComments, loadFailed} from './actions'
 import axios from '../../../axioses/axios-default'
 import {uiOperations} from '../ui'
 

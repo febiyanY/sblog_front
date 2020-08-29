@@ -1,8 +1,8 @@
 import reducer from './reducer'
-import {onAuthStart, onLogout, onCheckAuth, onLoadUserData} from './operations'
+import {onAuthStart, onLogout, onCheckAuth, onLoadUserData, onChangeAva, authFailed} from './operations'
 
 export {
-    onAuthStart, onLogout, onCheckAuth, onLoadUserData
+    onAuthStart, onLogout, onCheckAuth, onLoadUserData, onChangeAva, authFailed
 }
 
 export default reducer

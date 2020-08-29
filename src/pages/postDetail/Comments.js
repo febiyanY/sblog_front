@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import {
-    ListGroup, ListGroupItem, Button, Card, CardText, CardBody,
-    CardTitle, CardSubtitle, Row, Col, Form, InputGroup, Label, Input
-} from 'reactstrap'
+// import {makeStyles} from '@material-ui/core/styles'
+import {Button, Card, Grid, TextField, Divider} from '@material-ui/core'
+import {Reply, Edit, Delete, AddComment} from '@material-ui/icons'
 import { useSelector, useDispatch } from 'react-redux'
 import { commentsOperations } from '../../state/ducks/comments'
 import queryParser from '../../utils/queryparser'
@@ -11,7 +10,18 @@ import axios from '../../axioses/axios-default'
 import QuotedComment from './comment/QuotedComment'
 import moment from 'moment'
 
+// const useStyles = makeStyles((theme) => ({
+//     root: {
+//         '& > *': {
+//             margin: theme.spacing(1),
+//             width: '96%',
+//         },
+//     },
+// }));
+
+
 const Comments = props => {
+    // const classes = useStyles()
 
     const { comments } = useSelector(state => state.comments)
     const { isAuth } = useSelector(state => state.auth)
@@ -105,42 +115,44 @@ const Comments = props => {
 
     return (
         <React.Fragment>
-            {/* <br/> */}
-            {isAuth ? <Button onClick={addComment} size="sm">Add Comment</Button> : null}
+            
+            {isAuth ? <div style={{textAlign : 'right'}}> <Button onClick={addComment} size="small" variant="outlined" color="primary"><AddComment/></Button></div> : null}
+            
             {/* <ListGroup> */}
                 {comments.map(comment => {
                     return (
                         // <ListGroupItem key={comment.id} className="justify-content-between" >
-                            <Card key={comment.id} style={{marginTop : '1%'}}>
-                                <CardBody>
-                                    <Row>
-                                        <Col xs="6">
-                                        <CardTitle><b>@{comment.user.username}</b></CardTitle>
-                                        </Col>
-                                        <Col xs="6">
+                            <Card key={comment.id} style={{marginTop : '3%', padding : '2%'}} variant="outlined">
+                                <div>
+                                    <Grid container>
+                                        <Grid item xs={6}>
+                                        <p><b>@{comment.user.username}</b></p>
+                                        </Grid>
+                                        <Grid item xs={6} style={{textAlign : 'right'}}>
                                         <small style={{color : 'blue'}}>
-                                            {moment(comment.time).format("MM/Do/YYYY, h:mm a")}
+                                            {moment(comment.time).format("MM/Do/YYYY, h:mm A")}
                                         </small>
-                                        </Col>
-                                    </Row>
+                                        </Grid>
+                                    </Grid>
                                     
                                     {/* <CardSubtitle>{new Date(props.post.time).toString()}</CardSubtitle> */}
                                     {comment.reply ? <QuotedComment username={comment.reply.user.username} body={comment.reply.body} /> : null}
-                                    <CardText>{comment.body}</CardText>
-                                </CardBody>
-                                <Row>
-                                    <Col xs={{ size: 12 }} >
-                                        {isAuth ? <Button color="link" onClick={() => replyComment(comment.user.username, comment.id)}>reply</Button> : null}
+                                    {comment.body}
+                                </div>
+                                <Divider />
+                                <Grid container direction="row" justify="flex-end" alignItems="center">
+                                    <Grid item xs={12} style={{textAlign : 'right'}}>
+                                        {isAuth ? <Button onClick={() => replyComment(comment.user.username, comment.id)} size="small"><Reply/></Button> : null}
                                         {(localStorage.getItem('username') === comment.user.username) || localStorage.getItem('type') === 'admin' ?
                                             <React.Fragment>
-                                                <Button color="link" onClick={() => editComment(comment.body, comment.id)}>edit</Button>
-                                                <Button color="link" onClick={() => deleteComment(comment.id)}>delete</Button>
+                                                <Button onClick={() => editComment(comment.body, comment.id)} size="small"><Edit/></Button>
+                                                <Button onClick={() => deleteComment(comment.id)} size="small"><Delete/></Button>
                                             </React.Fragment>
                                             : null
                                         }
 
-                                    </Col>
-                                </Row>
+                                    </Grid>
+                                </Grid>
                             </Card>
                         // </ListGroupItem>
                     )
@@ -148,12 +160,9 @@ const Comments = props => {
             {/* </ListGroup> */}
 
             <Modal show={modal.show} toggle={closeModal} confirm={handleEditComment} confirmText={modal.confirmText} cancelText={modal.cancelText} title={modal.title}>
-                {mode !== 'delete' ? <Form onSubmit={onFormSubmit}>
-                    <InputGroup>
-                        <Input type="text" name="body" value={text} onChange={handleInputChange}  />
-                    </InputGroup>
-                </Form> : 'Delete this comment ?'}
-
+                {mode !== 'delete' ? <form onSubmit={onFormSubmit} autoComplete="off">
+                <TextField multiline variant="outlined" type="text" name="body" value={text} onChange={handleInputChange}  />
+                </form> : 'Delete this comment ?'}
             </Modal>
 
         </React.Fragment>

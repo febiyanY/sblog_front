@@ -1,27 +1,88 @@
 import React from 'react'
-import { Nav, NavLink } from 'reactstrap'
-import { NavLink as RRNavLink } from 'react-router-dom'
+// import { NavLink } from 'react-router-dom'
+import NavLink from './navLink/Link'
+
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import {AllInbox, AccountCircle, Home, ExitToApp, RecentActors} from '@material-ui/icons'
+
+import { useSelector } from 'react-redux'
 
 const NavLinks = props => {
+    const { isAuth } = useSelector(state => state.auth)
+
     let links
 
-    if (props.isAuth) {
+    if (isAuth) {
         links = (
-            <Nav>
-                <NavLink tag={RRNavLink} to="/" exact> Home </NavLink>
-                <NavLink tag={RRNavLink} to="/posts" exact> Posts </NavLink>
-                <NavLink tag={RRNavLink} to={`/profile/${localStorage.getItem('username')}`} > Profile </NavLink>
-                {localStorage.getItem('type')==='admin' ? <NavLink tag={RRNavLink} to="/users" > Users </NavLink> : null}
-                <NavLink tag={RRNavLink} to="/logout" > Logout </NavLink>
-            </Nav>
+            <div style={{ width: '250px' }}>
+                <List>
+                    <NavLink to="/" exact>
+                        <ListItem button>
+                            <ListItemIcon><Home /></ListItemIcon>
+                            <ListItemText primary="Home" />
+                        </ListItem>
+                    </NavLink>
+                    <NavLink to="/posts" exact> <ListItem button>
+                        <ListItemIcon><AllInbox /></ListItemIcon>
+                        <ListItemText primary="Posts" />
+                    </ListItem>
+                    </NavLink>
+                    {localStorage.getItem('type') === 'admin' ? <NavLink to="/users" >
+                        <ListItem button>
+                            <ListItemIcon><RecentActors /></ListItemIcon>
+                            <ListItemText primary="Users" />
+                        </ListItem>
+                    </NavLink> : null}
+                </List>
+                <Divider />
+                <List>
+                    <NavLink to={`/profile/${localStorage.getItem('username')}`} >
+                        <ListItem button>
+                            <ListItemIcon><AccountCircle /></ListItemIcon>
+                            <ListItemText primary="Profile" />
+                        </ListItem>
+                    </NavLink>
+                    <NavLink to="/logout" >
+                        <ListItem button>
+                            <ListItemIcon><ExitToApp /></ListItemIcon>
+                            <ListItemText primary="Logout" />
+                        </ListItem>
+                    </NavLink>
+                </List>
+            </div>
+
         )
-    }else {
+    } else {
         links = (
-            <Nav>
-                <NavLink tag={RRNavLink} to="/" exact> Home </NavLink>
-                <NavLink tag={RRNavLink} to="/posts" exact> Posts </NavLink>
-                <NavLink tag={RRNavLink} to="/login" > Login </NavLink>
-            </Nav>
+            <div style={{ width: '250px' }}>
+                <List>
+                    <NavLink to="/" exact>
+                        <ListItem button>
+                            <ListItemIcon><Home /></ListItemIcon>
+                            <ListItemText primary="Home" />
+                        </ListItem>
+                    </NavLink>
+                    <NavLink to="/posts" exact> <ListItem button>
+                        <ListItemIcon><AllInbox /></ListItemIcon>
+                        <ListItemText primary="Posts" />
+                    </ListItem>
+                    </NavLink>
+                </List>
+                <Divider />
+                <List>
+                    <NavLink to="/login" >
+                        <ListItem button>
+                            <ListItemIcon><ExitToApp /></ListItemIcon>
+                            <ListItemText primary="Login" />
+                        </ListItem>
+                    </NavLink>
+                </List>
+            </div>
         )
     }
 

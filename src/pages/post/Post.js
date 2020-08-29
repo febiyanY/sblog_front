@@ -1,21 +1,28 @@
 import React from 'react'
-import {
-    ListGroupItem, Card, CardText, CardBody,
-    CardTitle, CardSubtitle
-} from 'reactstrap';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import moment from 'moment'
+import Grid from '@material-ui/core/Grid';
 
 const Post = (props) => {
 
     return (
-        // <ListGroupItem className="justify-content-between" onClick={props.clicked} >
-            <Card onClick={props.clicked}>
-                <CardBody>
-                    <CardTitle><b>{props.post.title}</b></CardTitle>
-                    <CardSubtitle>{new Date(props.post.time).toString()}</CardSubtitle>
-                    <CardText>{props.post.body}</CardText>
-                </CardBody>
-            </Card>
-        // </ListGroupItem>
+        // <Paper>
+        <Card variant="outlined">
+            <CardContent>
+                <Grid container>
+                    <Grid item xs={9}>
+                        <p><b>{props.post.title}</b></p>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <small>{moment(props.post.time).format("MMM-Do-YYYY")}</small>
+                    </Grid>
+                    <p>{props.post.body.slice(0,20)}...</p>
+                </Grid>
+            </CardContent>
+        </Card>
+
+        // </Paper>
     )
 }
 
