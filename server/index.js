@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended : true}))
 
 app.all('*', (req,res) => {
-    res.sendFile(buildPath)
+    res.sendFile(path.join(buildPath,'index.html'))
 })
 
 app.listen(port, () => {
