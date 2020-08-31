@@ -80,17 +80,17 @@ const PostDetail = props => {
                                     <Grid item xs={7}>
                                         <Grid container>
                                             <Grid item xs={2}>
-                                                <Avatar src={`${process.env.REACT_APP_API_URL}/images/avatars/${post.user.ava}`} className={classes.avatar} />
+                                                <Avatar src={`${process.env.REACT_APP_API_URL}/images/avatars/${post.User.ava}`} className={classes.avatar} />
                                             </Grid>
                                             <Grid item xs={10}>
-                                                <small>@{post.user.username}</small>
+                                                <small>@{post.User.username}</small>
                                             </Grid>
                                         </Grid>
 
 
                                     </Grid>
                                     <Grid item xs={5}>
-                                        {(localStorage.getItem('username') === post.user.username) || localStorage.getItem('type') === 'admin' ?
+                                        {(localStorage.getItem('username') === post.User.username) || localStorage.getItem('type') === 'admin' ?
                                             <div style={{textAlign : 'right'}}>
                                                 <Button onClick={openMenu}><MoreVert/></Button>
                                                 <Menu

@@ -126,7 +126,7 @@ const Comments = props => {
                                 <div>
                                     <Grid container>
                                         <Grid item xs={6}>
-                                        <p><b>@{comment.user.username}</b></p>
+                                        <p><b>@{comment.User.username}</b></p>
                                         </Grid>
                                         <Grid item xs={6} style={{textAlign : 'right'}}>
                                         <small style={{color : 'blue'}}>
@@ -136,14 +136,14 @@ const Comments = props => {
                                     </Grid>
                                     
                                     {/* <CardSubtitle>{new Date(props.post.time).toString()}</CardSubtitle> */}
-                                    {comment.reply ? <QuotedComment username={comment.reply.user.username} body={comment.reply.body} /> : null}
+                                    {comment.reply ? <QuotedComment username={comment.reply.User.username} body={comment.reply.body} /> : null}
                                     {comment.body}
                                 </div>
                                 <Divider />
                                 <Grid container direction="row" justify="flex-end" alignItems="center">
                                     <Grid item xs={12} style={{textAlign : 'right'}}>
-                                        {isAuth ? <Button onClick={() => replyComment(comment.user.username, comment.id)} size="small"><Reply/></Button> : null}
-                                        {(localStorage.getItem('username') === comment.user.username) || localStorage.getItem('type') === 'admin' ?
+                                        {isAuth ? <Button onClick={() => replyComment(comment.User.username, comment.id)} size="small"><Reply/></Button> : null}
+                                        {(localStorage.getItem('username') === comment.User.username) || localStorage.getItem('type') === 'admin' ?
                                             <React.Fragment>
                                                 <Button onClick={() => editComment(comment.body, comment.id)} size="small"><Edit/></Button>
                                                 <Button onClick={() => deleteComment(comment.id)} size="small"><Delete/></Button>
