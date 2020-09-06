@@ -3,7 +3,7 @@ import axios from '../axioses/axios-default'
 import { Button, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import Modal from '../components/Modal'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { uiOperations } from '../state/ducks/ui'
 
 const useStyles = makeStyles(theme => ({
@@ -22,6 +22,7 @@ const NewPost = props => {
     const [modal, setModal] = useState(false)
     // const [isLoading, setIsLoading] = useState(false)
     const dispatch = useDispatch()
+    const {user} = useSelector(state => state.auth)
 
 
     const handleInputChange = (event) => {
@@ -40,12 +41,12 @@ const NewPost = props => {
     const closeModal = useCallback(() => setModal(false), [])
     const doSomething = useCallback(() => {
         dispatch(uiOperations.showLoader())
-        axios.post('/posts', form, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }).then(res => {
+        axios.post('/posts', form).then(res => {
             setModal(false)
             dispatch(uiOperations.hideLoader())
-            props.history.push(`/profile/${localStorage.getItem('username')}/posts`)
+            props.history.push(`/profile/${user.username}/posts`)
         })
-    }, [props.history, dispatch, form])
+    }, [props.history, dispatch, form, user.username])
 
     return (
         <div>

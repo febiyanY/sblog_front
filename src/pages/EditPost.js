@@ -42,7 +42,7 @@ const EditPost = props => {
         axios.patch('/posts', {
             postId: props.location.state.postId,
             update: form
-        }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }).then(res => {
+        }).then(res => {
             props.history.push(`/posts/${props.location.state.key}`)
         }).catch(err => {
             console.log(err)

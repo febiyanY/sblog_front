@@ -5,9 +5,10 @@ import { Card, Grid, Button, Divider, Avatar, Menu, MenuItem } from '@material-u
 import { MoreVert, Edit, Delete } from '@material-ui/icons'
 import { Link } from 'react-router-dom'
 import { GenerateRouteWithSwitch } from '../components/GenerateRoute'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { uiOperations } from '../state/ducks/ui'
 import Modal from '../components/Modal'
+import Votes from '../components/Votes'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,6 +36,7 @@ const PostDetail = props => {
     const [modal, setModal] = useState(false)
     const [anchorMenu, setAnchorMenu] = useState(null)
     const dispatch = useDispatch()
+    const {user, isAuth} = useSelector(state => state.auth)
 
     useEffect(() => {
         dispatch(uiOperations.showLoader())
@@ -49,8 +51,8 @@ const PostDetail = props => {
 
     const handleConfirmDeletePost = useCallback(() => {
         dispatch(uiOperations.showLoader())
-        axios.delete('/posts/' + post.id, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }).then(res => {
-            props.history.replace(`/profile/${localStorage.getItem('username')}/posts`)
+        axios.delete('/posts/' + post.id).then(res => {
+            props.history.replace(`/profile/${user.username}/posts`)
         }).catch(err => {
             console.log(err)
             dispatch(uiOperations.hideLoader())
@@ -68,6 +70,79 @@ const PostDetail = props => {
         setAnchorMenu(e.target)
     }
     const closeMenu = () => setAnchorMenu(null)
+
+    const upvote = useCallback((postId) => {
+        if(user){
+            axios.post('/posts/upvote', {postId})
+            if(post.PostDownvotes.length!==0){
+                setPost(() => {
+                    return {
+                        ...post,
+                        votes : post.votes+2,
+                        PostUpvotes : ['isi'],
+                        PostDownvotes : []
+                    }
+                })
+            }else{
+                setPost(() => {
+                    return {
+                        ...post,
+                        votes : post.votes+1,
+                        PostUpvotes : ['isi'],
+                        PostDownvotes : []
+                    }
+                })
+            }
+        }
+    },[post,user])
+    const undoUpvote = useCallback((postId) => {
+        if(user){
+            axios.post('/posts/undoupvote', {postId})
+            setPost(() => {
+                return {
+                    ...post,
+                    votes : post.votes-1,
+                    PostUpvotes : []
+                }
+            })
+        }
+    },[post,user])
+    const downvote = useCallback((postId) => {
+        if(user){
+            axios.post('/posts/downvote', {postId})
+            if(post.PostUpvotes.length!==0){
+                setPost(() => {
+                    return {
+                        ...post,
+                        votes : post.votes-2,
+                        PostUpvotes : [],
+                        PostDownvotes : ['isi']
+                    }
+                })
+            }else{
+                setPost(() => {
+                    return {
+                        ...post,
+                        votes : post.votes-1,
+                        PostUpvotes : [],
+                        PostDownvotes : ['isi']
+                    }
+                })
+            }
+        }
+    },[post,user])
+    const undoDownvote = useCallback((postId) => {
+        if(user){
+            axios.post('/posts/undodownvote', {postId})
+            setPost(() => {
+                return {
+                    ...post,
+                    votes : post.votes+1,
+                    PostDownvotes : []
+                }
+            })
+        }
+    },[post,user])
 
     return (
         <div className={classes.root}>
@@ -90,7 +165,7 @@ const PostDetail = props => {
 
                                     </Grid>
                                     <Grid item xs={5}>
-                                        {(localStorage.getItem('username') === post.User.username) || localStorage.getItem('type') === 'admin' ?
+                                        {(user && user.username === post.User.username) || (user && user.type === 'admin') ?
                                             <div style={{textAlign : 'right'}}>
                                                 <Button onClick={openMenu}><MoreVert/></Button>
                                                 <Menu
@@ -110,7 +185,11 @@ const PostDetail = props => {
                                 <p><b>{post.title}</b></p>
                                 <Divider />
                                 <p>{post.body}</p>
-                            </div>}
+                                <Divider />
+                                <Votes data={post} upvote={upvote} undoUpvote={undoUpvote} downvote={downvote} undoDownvote={undoDownvote} isAuth={isAuth} {...props}>{post.votes}</Votes>
+                            </div>
+                            
+                            }
                         </div>
                     </Card>
                 </Grid>

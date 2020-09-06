@@ -4,39 +4,11 @@ import { RouteWithSubRoutes } from '../routes/routes'
 import {Switch} from 'react-router-dom'
 import NProgress from './NProgress'
 
-export const GenerateRoute = props => {
-    // const {isAuth} = useSelector(state => state.auth)
-    const isAuth = Boolean(localStorage.getItem('userId'))
-
-    let routeList
-    if (isAuth) {
-        routeList = props.routes.map((route, i) => {
-            return <RouteWithSubRoutes key={i} {...route} />
-        })
-    } else {
-        routeList = props.routes.filter(route => route.auth !== true).map((route, i) => {
-            return <RouteWithSubRoutes key={i} {...route} />
-        })
-    }
-
-    return routeList
-}
-
 export const GenerateRouteWithSwitch = props => {
-    // const {isAuth} = useSelector(state => state.auth)
-    const isAuth = Boolean(localStorage.getItem('userId'))
-    
-    let routeList = []
-    if(isAuth){
-        routeList = props.routes
-    }else{
-        routeList = props.routes.filter(route => route.auth !== true)
-    }
-
     return (
         <Switch>
             <Suspense fallback={<NProgress />}>
-            {routeList.map((route, i) => {
+            {props.routes.map((route, i) => {
                 return (
                     <RouteWithSubRoutes key={1} {...route} />
                 )

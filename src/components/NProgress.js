@@ -9,7 +9,7 @@ const Nprogress = props => {
     const {isLoading} = useSelector(state => state.ui)
     
     return (
-        <NProgress isAnimating={isLoading} >
+        <NProgress isAnimating={props.show || isLoading} >
         {({ isFinished, progress, animationDuration }) => (
             <Container
                 isFinished={isFinished}

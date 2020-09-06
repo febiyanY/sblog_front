@@ -17,7 +17,7 @@ const Post = (props) => {
                     <Grid item xs={3}>
                         <small>{moment(props.post.time).format("MMM-Do-YYYY")}</small>
                     </Grid>
-                    <p>{props.post.body.slice(0,20)}...</p>
+                    <p>{props.post.body.slice(0, 20)}...</p>
                 </Grid>
             </CardContent>
         </Card>

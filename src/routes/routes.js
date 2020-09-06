@@ -1,15 +1,40 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import Home from '../pages/Home'
+import { useSelector } from 'react-redux'
+import NProgress from '../components/NProgress'
 
 export const RouteWithSubRoutes = route => {
+    const { user, authLoading } = useSelector(state => state.auth)
     return (
         <Route
             path={route.path}
             exact={route.exact}
-            render={props => (
-                <route.component {...props} routes={route.routes} />
-            )}
+            render={props => {
+                let rut
+                if (!authLoading) {
+                    if (route.auth) {
+                        if (user) {
+                            if (route.admin) {
+                                if(user.type==='admin'){
+                                    rut = <route.component {...props} routes={route.routes} />
+                                }else{
+                                    rut = <Redirect to="/" />
+                                }
+                            } else {
+                                rut = <route.component {...props} routes={route.routes} />
+                            }
+                        } else {
+                            rut = <Redirect to="/" />
+                        }
+                    } else {
+                        rut = <route.component {...props} routes={route.routes} />
+                    }
+                } else {
+                    rut = <NProgress show />
+                }
+                return rut
+            }}
         />
     )
 }
@@ -29,7 +54,7 @@ const routes = [
     },
     {
         path: '/profile', component: React.lazy(() => import('../pages/Profile')), auth: true, routes: [
-            { path: '/profile/:id', component: React.lazy(() => import('../pages/profile/Account')), exact:true, auth: true },
+            { path: '/profile/:id', component: React.lazy(() => import('../pages/profile/Account')), exact: true, auth: true },
             { path: '/profile/:id/edit', component: React.lazy(() => import('../pages/profile/EditAccount')), auth: true },
             { path: '/profile/:id/posts', component: React.lazy(() => import('../pages/profile/MyPosts')), auth: true }
         ]

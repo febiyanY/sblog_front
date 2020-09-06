@@ -9,6 +9,7 @@ import Modal from '../../components/Modal'
 import axios from '../../axioses/axios-default'
 import QuotedComment from './comment/QuotedComment'
 import moment from 'moment'
+import Votes from '../../components/Votes'
 
 // const useStyles = makeStyles((theme) => ({
 //     root: {
@@ -24,7 +25,7 @@ const Comments = props => {
     // const classes = useStyles()
 
     const { comments } = useSelector(state => state.comments)
-    const { isAuth } = useSelector(state => state.auth)
+    const { isAuth, user } = useSelector(state => state.auth)
     const dispatch = useDispatch()
     const [text, setText] = useState('')
     const [modal, setModal] = useState({ show: false, title: 'Add Comment', confirmText: 'Add', cancelText: 'Cancel' })
@@ -98,8 +99,7 @@ const Comments = props => {
         axios({
             method,
             url: '/comments' + suffix,
-            data,
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            data
         }).then(res => {
             setModal(() => ({ ...modal, show: false }))
             dispatch(commentsOperations.onLoadComments(queryObj.postId))
@@ -112,6 +112,19 @@ const Comments = props => {
     const onFormSubmit = (e) => {
         e.preventDefault()
     }
+
+    const upvote = useCallback((commentId) => {
+        dispatch(commentsOperations.onUpvote(commentId))
+    },[dispatch])
+    const undoUpvote = useCallback((commentId) => {
+        dispatch(commentsOperations.onUndoUpvote(commentId))
+    },[dispatch])
+    const downvote = useCallback((commentId) => {
+        dispatch(commentsOperations.onDownvote(commentId))
+    },[dispatch])
+    const undoDownvote = useCallback((commentId) => {
+        dispatch(commentsOperations.onUndoDownvote(commentId))
+    },[dispatch])
 
     return (
         <React.Fragment>
@@ -141,16 +154,18 @@ const Comments = props => {
                                 </div>
                                 <Divider />
                                 <Grid container direction="row" justify="flex-end" alignItems="center">
-                                    <Grid item xs={12} style={{textAlign : 'right'}}>
-                                        {isAuth ? <Button onClick={() => replyComment(comment.User.username, comment.id)} size="small"><Reply/></Button> : null}
-                                        {(localStorage.getItem('username') === comment.User.username) || localStorage.getItem('type') === 'admin' ?
+                                    <Grid item xs={5} style={{textAlign : 'left'}}>
+                                        <Votes data={comment} upvote={upvote} undoUpvote={undoUpvote} downvote={downvote} undoDownvote={undoDownvote} isAuth={isAuth} {...props}>{comment.votes}</Votes>
+                                    </Grid>
+                                    <Grid item xs={7} style={{textAlign : 'right'}}>
+                                        {isAuth ? <Button onClick={() => replyComment(comment.User.username, comment.id)} size="small"><Reply fontSize="small"/></Button> : null}
+                                        {(user && user.username === comment.User.username) || (user && user.type === 'admin') ?
                                             <React.Fragment>
-                                                <Button onClick={() => editComment(comment.body, comment.id)} size="small"><Edit/></Button>
-                                                <Button onClick={() => deleteComment(comment.id)} size="small"><Delete/></Button>
+                                                <Button onClick={() => editComment(comment.body, comment.id)} size="small"><Edit fontSize="small"/></Button>
+                                                <Button onClick={() => deleteComment(comment.id)} size="small"><Delete fontSize="small"/></Button>
                                             </React.Fragment>
                                             : null
                                         }
-
                                     </Grid>
                                 </Grid>
                             </Card>

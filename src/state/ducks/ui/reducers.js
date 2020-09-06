@@ -1,7 +1,7 @@
 import * as types from './types'
 
 const initialState = {
-    isLoading: false,
+    isLoading: true,
     drawer: false
 }
 

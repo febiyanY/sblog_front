@@ -13,7 +13,7 @@ import {AllInbox, AccountCircle, Home, ExitToApp, RecentActors} from '@material-
 import { useSelector } from 'react-redux'
 
 const NavLinks = props => {
-    const { isAuth } = useSelector(state => state.auth)
+    const { isAuth, user } = useSelector(state => state.auth)
 
     let links
 
@@ -32,7 +32,7 @@ const NavLinks = props => {
                         <ListItemText primary="Posts" />
                     </ListItem>
                     </NavLink>
-                    {localStorage.getItem('type') === 'admin' ? <NavLink to="/users" >
+                    {user.type === 'admin' ? <NavLink to="/users" >
                         <ListItem button>
                             <ListItemIcon><RecentActors /></ListItemIcon>
                             <ListItemText primary="Users" />
@@ -41,7 +41,7 @@ const NavLinks = props => {
                 </List>
                 <Divider />
                 <List>
-                    <NavLink to={`/profile/${localStorage.getItem('username')}`} >
+                    <NavLink to={`/profile/${user.username}`} >
                         <ListItem button>
                             <ListItemIcon><AccountCircle /></ListItemIcon>
                             <ListItemText primary="Profile" />

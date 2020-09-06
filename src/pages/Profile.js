@@ -2,9 +2,11 @@ import React,{useEffect, useState} from 'react'
 import { Grid, Button } from '@material-ui/core'
 import { Switch} from 'react-router-dom'
 import { RouteWithSubRoutes } from '../routes/routes'
+import {useSelector} from 'react-redux'
 
 const Profile = props => {
     const [button, setButton] = useState({account : 'contained', post : undefined})
+    const {user} = useSelector(state => state.auth)
 
     const goTo = (link, id) => {
         let btn = {...button}
@@ -22,9 +24,9 @@ const Profile = props => {
     useEffect(() => {
         let pathname = window.location.pathname
         let to
-        if(pathname===`${props.match.url}/${localStorage.getItem('username')}`){
+        if(pathname===`${props.match.url}/${user.username}`){
             to = 'account'
-        }else if(pathname===`${props.match.url}/${localStorage.getItem('username')}/posts`){
+        }else if(pathname===`${props.match.url}/${user.username}/posts`){
             to = 'post'
         }
         let btn = {...button}
@@ -44,8 +46,8 @@ const Profile = props => {
                 <Grid item xs={12}>
                     {/* <NavLink  to={`${props.match.url}/${localStorage.getItem('username')}`} exact> Account </NavLink>
                     <NavLink  to={`${props.match.url}/${localStorage.getItem('username')}/posts`} exact> My Post </NavLink> */}
-                    <Button color="primary" variant={button.account} onClick={() => goTo(`${props.match.url}/${localStorage.getItem('username')}`, 'account')} disableElevation> Account </Button>
-                    <Button color="primary" variant={button.post} onClick={() => goTo(`${props.match.url}/${localStorage.getItem('username')}/posts`, 'post')} disableElevation> My Post </Button>
+                    <Button color="primary" variant={button.account} onClick={() => goTo(`${props.match.url}/${user.username}`, 'account')} disableElevation> Account </Button>
+                    <Button color="primary" variant={button.post} onClick={() => goTo(`${props.match.url}/${user.username}/posts`, 'post')} disableElevation> My Post </Button>
                 </Grid>
             </Grid>
             <Switch>

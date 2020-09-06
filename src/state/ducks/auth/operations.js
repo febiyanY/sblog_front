@@ -11,14 +11,7 @@ export const onAuthStart = (data) => dispatch => {
     axios.post('/login', data).then(res => {
         // console.log(res)
         const user = res.data
-        localStorage.setItem('userId', user.data.id)
-        localStorage.setItem('username', user.data.username)
-        localStorage.setItem('display_name', user.data.display_name)
-        localStorage.setItem('ava', user.data.ava)
-        localStorage.setItem('type', user.data.type)
-        localStorage.setItem('token', user.token)
-        localStorage.setItem('token_expire', user.data.token_expire)
-        dispatch(authSucceed({...user.data, userId:user.data.id, token : user.token}))
+        dispatch(authSucceed({...user, userId:user.id}))
         dispatch(uiOperations.hideLoader())
     }).catch(err => {
         // console.log(err.response)
@@ -28,15 +21,12 @@ export const onAuthStart = (data) => dispatch => {
 
 }
 
-export const onLoadUserData = () => dispatch => {
+export const onLoadUserData = () => (dispatch, getState) => {
     dispatch(uiOperations.showLoader())
+    const {auth} = getState()
     return new Promise((resolve, reject) => {
-        axios.get(`/users/${localStorage.getItem('userId')}`, {headers : {Authorization : `Bearer ${localStorage.getItem('token')}`}}).then(res => {
+        axios.get(`/users/${auth.user.userId}`).then(res => {
             const user = res.data
-            localStorage.setItem('userId', user.id)
-            localStorage.setItem('username', user.username)
-            localStorage.setItem('display_name', user.display_name)
-            localStorage.setItem('ava', user.ava)
             dispatch(loadUserData({userId : user.id, username : user.username, display_name : user.display_name, ava : user.ava }))
             dispatch(uiOperations.hideLoader())
             resolve({message : 'suksesss'})
@@ -51,45 +41,34 @@ export const onLoadUserData = () => dispatch => {
 }
 
 export const onLogout = () => dispatch => {
-    localStorage.removeItem('userId')
-    localStorage.removeItem('username')
-    localStorage.removeItem('display_name')
-    localStorage.removeItem('ava')
-    localStorage.removeItem('type')
-    localStorage.removeItem('token')
-    localStorage.removeItem('token_expire')
-    dispatch(logout())
-}
-
-export const onCheckAuth = () => dispatch => {
-    if (localStorage.getItem('token')) {
-        const data = {
-            userId: localStorage.getItem('userId'),
-            username: localStorage.getItem('username'),
-            display_name: localStorage.getItem('display_name'),
-            ava: localStorage.getItem('ava'),
-            type: localStorage.getItem('type'),
-            token: localStorage.getItem('token'),
-            token_expire: localStorage.getItem('token_expire')
-        }
-        dispatch(authSucceed(data))
-    }else{
+    axios.get('/logout').then(res => {
         dispatch(logout())
-    }
+    })
 }
 
-export const onChangeAva = (ava) => dispatch => {
+export const onCheckAuth = () => (dispatch,getState) => {
+    // const store = getState()
+    // console.log(store)
+    dispatch(uiOperations.showLoader())
+    axios.get('/users/checksession').then(res => {
+        dispatch(authSucceed({...res.data, userId : res.data.id}))
+        dispatch(uiOperations.hideLoader())
+    }).catch(err => {
+        // console.log(err.response.data)
+        dispatch(logout())
+        dispatch(uiOperations.hideLoader())
+    })
+}
+
+export const onChangeAva = (ava) => (dispatch, getState) => {
+    const {auth} = getState()
     dispatch(uiOperations.showLoader())
     let formData = new FormData()
     formData.append('image', ava)
-    formData.append('userId', localStorage.getItem('userId'))
+    formData.append('userId', auth.user.userId)
     return new Promise((resolve, reject) => {
-        axios.post('/users/uploadava', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization : `Bearer ${localStorage.getItem('token')}`
-            }
-        }).then(res => {
+        axios.post('/users/uploadava', formData
+        ).then(res => {
             dispatch(uiOperations.hideLoader())
             resolve(res.data)
         }).catch(err => {

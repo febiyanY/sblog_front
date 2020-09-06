@@ -15,3 +15,19 @@ export const loadFailed = (error) => ({
     type : types.LOAD_START,
     error
 })
+export const upvote = (commentId) => ({
+    type : types.UPVOTE,
+    commentId
+})
+export const undoUpvote = (commentId) => ({
+    type : types.UNDO_UPVOTE,
+    commentId
+})
+export const downvote = (commentId) => ({
+    type : types.DOWNVOTE,
+    commentId
+})
+export const undoDownvote = (commentId) => ({
+    type : types.UNDO_DOWNVOTE,
+    commentId
+})

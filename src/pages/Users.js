@@ -117,8 +117,7 @@ const Users = props => {
         axios({
             url: '/users' + suffix,
             method,
-            data,
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            data
         }).then(res => {
             dispatch(userOperations.onLoadUsers())
             setModal(() => ({ ...modal, show: false }))
