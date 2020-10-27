@@ -1,6 +1,6 @@
 This is a community blogging app that let user to sign up, create thread, comment and votes. More like a forum i’d say. 
 
-The Back-End code can be found here: https://github.com/febiyanY/stupidblog_back
+The Back-End code can be found here: https://github.com/febiyanY/sblog_back
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
