@@ -32,7 +32,7 @@ const Layout = props => {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" style={{color : '#4b19e0'}}>
-                        StupidBlog
+                        SBlog
                     </Typography>
                 </Toolbar>
             </AppBar>
